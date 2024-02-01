@@ -40,14 +40,18 @@ class ConfluenceConverter:
         self.title: str = title
         self.space_key: str = space_key
 
-    def delete(self):
+    def delete(self, simulate: bool):
         title = self.get_title()
         LOGGER.info(f"Checking if page with title {title} exists...")
         page = self.get_client().get_page(title)
 
         if page is not None and page.id > 0:
             LOGGER.info(f"Deleting page with title {title}...")
-            self.client.delete_page(page.id)
+
+            if not simulate:
+                self.client.delete_page(page.id)
+            else:
+                LOGGER.info("Simulate mode is active - stop processing here.")
         else:
             LOGGER.warn("Page does not exist")
 
@@ -64,7 +68,6 @@ class ConfluenceConverter:
     def convert(
         self,
         simulate: bool,
-        delete: bool,
         remove_emojies: bool,
         add_contents: bool,
         labels: typing.List[str],
@@ -92,13 +95,9 @@ class ConfluenceConverter:
         LOGGER.info("Checking if Atlas page exists...")
         page = self.get_client().get_page(title)
 
-        if delete and page is not None and page.id > 0:
-            self.client.delete_page(page.id)
-            return
-
         parent_page_id = self.get_parent_page()
 
-        if page.id == 0:
+        if page is None or page.id == 0:
             page = self.get_client().create_page(title, html, parent_page_id)
 
         LOGGER.info("Page Id %d" % page.id)

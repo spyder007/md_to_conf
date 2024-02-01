@@ -216,6 +216,10 @@ def main():
         VERSION,
     )
 
+    if DELETE:
+        confluence_converter.delete_page(SIMULATE)
+        return
+
     confluence_converter.convert(
-        SIMULATE, DELETE, REMOVE_EMOJIES, CONTENTS, LABELS, PROPERTIES, ATTACHMENTS
+        SIMULATE, REMOVE_EMOJIES, CONTENTS, LABELS, PROPERTIES, ATTACHMENTS
     )
