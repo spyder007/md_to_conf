@@ -40,20 +40,23 @@ class ConfluenceConverter:
         self.title: str = title
         self.space_key: str = space_key
 
-    def delete(self, simulate: bool):
-        title = self.get_title()
-        LOGGER.info(f"Checking if page with title {title} exists...")
-        page = self.get_client().get_page(title)
+    def delete(self, simulate: bool) -> bool:
+        delete_title = self.get_title()
+        LOGGER.info(f"Checking if page with title {delete_title} exists...")
+        page = self.get_client().get_page(delete_title)
 
         if page is not None and page.id > 0:
-            LOGGER.info(f"Deleting page with title {title}...")
+            LOGGER.info(f"Deleting page with title {delete_title}...")
 
             if not simulate:
-                self.client.delete_page(page.id)
+                return self.get_client().delete_page(page.id)
             else:
                 LOGGER.info("Simulate mode is active - stop processing here.")
+                return True
+
         else:
-            LOGGER.warn("Page does not exist")
+            LOGGER.warning("Page does not exist")
+            return False
 
     def get_title(self) -> str:
         if self.title is not None:
@@ -136,11 +139,16 @@ class ConfluenceConverter:
             page_id: Confluence page id
             files: list of files to attach to the given Confluence page
         """
+        success = True
         if files:
             for file in files:
-                self.get_client().upload_attachment(
+                file_result = self.get_client().upload_attachment(
                     page_id, os.path.join(self.source_folder, file), ""
                 )
+                if not file_result:
+                    success = False
+
+        return success
 
     def add_images(self, page_id: int, html: str) -> str:
         """

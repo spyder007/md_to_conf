@@ -1,5 +1,6 @@
 import pytest
 import logging
+import os
 from md_to_conf import ConfluenceConverter, PageInfo, ConfluenceApiClient
 from unittest.mock import patch
 
@@ -162,3 +163,117 @@ def test_get_parent_page_missing_ancestor(get_page_mock, caplog):
     assert (
         "Error: Parent page does not exist: ancestortitle" == caplog.records[0].message
     )
+
+
+@patch.object(ConfluenceApiClient, "get_page", return_value=PageInfo(0, 0, 0, ""))
+def test_delete_missing_page(get_page_mock, caplog):
+    caplog.set_level(logging.WARNING)
+    converter = ConfluenceConverter(
+        "tests/testfiles/basic.md",
+        "default",
+        None,
+        "orgname",
+        True,
+        "username",
+        "spacekey",
+        "apikey",
+        "ancestortitle",
+        2,
+    )
+
+    result = converter.delete(False)
+
+    get_page_mock.assert_called_once_with("Basic Page")
+    assert result is False
+    assert len(caplog.records) == 1
+    assert "Page does not exist" == caplog.records[0].message
+
+
+@patch.object(ConfluenceApiClient, "get_page", return_value=PageInfo(1, 1, 1, ""))
+@patch.object(ConfluenceApiClient, "delete_page", return_value=True)
+def test_delete_page(delete_page_mock, get_page_mock):
+    converter = ConfluenceConverter(
+        "tests/testfiles/basic.md",
+        "default",
+        None,
+        "orgname",
+        True,
+        "username",
+        "spacekey",
+        "apikey",
+        "ancestortitle",
+        2,
+    )
+
+    result = converter.delete(False)
+
+    get_page_mock.assert_called_once_with("Basic Page")
+    delete_page_mock.assert_called_once_with(1)
+    assert result is True
+
+
+@patch.object(ConfluenceApiClient, "get_page", return_value=PageInfo(1, 1, 1, ""))
+@patch.object(ConfluenceApiClient, "delete_page", return_value=True)
+def test_delete_page_simulate(delete_page_mock, get_page_mock):
+    converter = ConfluenceConverter(
+        "tests/testfiles/basic.md",
+        "default",
+        None,
+        "orgname",
+        True,
+        "username",
+        "spacekey",
+        "apikey",
+        "ancestortitle",
+        2,
+    )
+
+    result = converter.delete(True)
+
+    get_page_mock.assert_called_once_with("Basic Page")
+    delete_page_mock.assert_not_called()
+    assert result is True
+
+
+@patch.object(ConfluenceApiClient, "upload_attachment", return_value=True)
+def test_upload_attachments(upload_attachment_mock):
+    converter = ConfluenceConverter(
+        "tests/testfiles/basic.md",
+        "default",
+        None,
+        "orgname",
+        True,
+        "username",
+        "spacekey",
+        "apikey",
+        "ancestortitle",
+        2,
+    )
+
+    result = converter.add_attachments(1, ["image1.jpg"])
+    expected_upload = os.path.join(converter.source_folder, "image1.jpg")
+    upload_attachment_mock.assert_called_once_with(1, expected_upload, "")
+
+    assert result is True
+
+
+@patch.object(ConfluenceApiClient, "upload_attachment", return_value=False)
+def test_bad_upload_attachments(upload_attachment_mock):
+    converter = ConfluenceConverter(
+        "tests/testfiles/basic.md",
+        "default",
+        None,
+        "orgname",
+        True,
+        "username",
+        "spacekey",
+        "apikey",
+        "ancestortitle",
+        2,
+    )
+
+    result = converter.add_attachments(1, ["image1.jpg"])
+    expected_upload = os.path.join(converter.source_folder, "image1.jpg")
+    upload_attachment_mock.assert_called_once_with(1, expected_upload, "")
+
+    assert result is False

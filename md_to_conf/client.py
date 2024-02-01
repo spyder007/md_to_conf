@@ -281,7 +281,7 @@ class ConfluenceApiClient:
             LOGGER.error("Could not create page.")
             return PageInfo(0, 0, 0, "")
 
-    def delete_page(self, page_id: int):
+    def delete_page(self, page_id: int) -> bool:
         """
         Delete a page
 
@@ -296,8 +296,10 @@ class ConfluenceApiClient:
 
         if response.status_code == 204:
             LOGGER.info("Page %d deleted successfully.", page_id)
+            return True
         else:
             LOGGER.error("Page %d could not be deleted.", page_id)
+            return False
 
     def get_page(self, title: str) -> PageInfo:
         """
