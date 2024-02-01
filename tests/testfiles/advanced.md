@@ -1,24 +1,36 @@
 # Advanced Page
 
-## Heading 2
+## Headings
 
-Some text for heading 2
+The heading for this section is a level 2 heading
 
-### Heading 3-1
+### Level 3
 
-Some text for heading 3-1
+Some text for level 3
 
-### Heading 3-2
+#### Level 4
 
-Some test for heading 3-2
+Some text for level 4
+
+##### Level 5
+
+Some text for level 5
+
+## Lists
+
+### Unordered list
 
 * An
 * unordered
 * list
 
+### Ordered list
+
 1. An
 2. Ordered
 3. List
+
+### Nested Unordered list
 
 * This list is nested
 * This item has children
@@ -26,28 +38,48 @@ Some test for heading 3-2
   * Another child of item 2
 * This is the third item
   
+### Nested Ordered list
+
 1. This list is nested
 2. This item has children
    1. This is a child of item 2
    2. Another child of item 2
 3. This is the third item
 
-Text above Info
+## Blocks
+
+### Info Block
 
 > This should be an info block
 
-Text above Note
+### Note/Warning Block
 
 > Note: This should be a note block
 
-Text above warning
+### Warning Block
 
 > Warning: This should be a warning block
+
+## Code
+
+### No language
 
 ```
 This is a code block with on language assigned
 ```
 
+### Javascript
+
 ```javascript
 var block = has_javascript_lang();
 ```
+
+## Tables
+
+| Heading 1 | Heading 2 | Heading 3 |
+| --------- | --------- | --------- |
+| Data 1    | Data 2    | Data 3    |
+| Data 1    | Data 2    | Data 3    |
+| Data 1    | Data 2    | Data 3    |
+| Data 1    | Data 2    | Data 3    |
+| Data 1    | Data 2    | Data 3    |

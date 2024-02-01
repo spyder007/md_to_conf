@@ -38,9 +38,28 @@ class ConfluenceConverter:
         self.version = version
         self.ancestor: str = ancestor
         self.title: str = title
+        self.space_key: str = space_key
 
-        self.space_key: str = self.get_space_key(space_key)
-        self.confluence_client = self.get_client()
+    def delete(self):
+        title = self.get_title()
+        LOGGER.info(f"Checking if page with title {title} exists...")
+        page = self.get_client().get_page(title)
+
+        if page is not None and page.id > 0:
+            LOGGER.info(f"Deleting page with title {title}...")
+            self.client.delete_page(page.id)
+        else:
+            LOGGER.warn("Page does not exist")
+
+    def get_title(self) -> str:
+        if self.title is not None:
+            return self.title
+        else:
+            title = ""
+            with open(self.file, "r") as mdfile:
+                title = mdfile.readline().lstrip("#").strip()
+                mdfile.seek(0)
+            return title
 
     def convert(
         self,
@@ -56,17 +75,10 @@ class ConfluenceConverter:
             self.file, self.get_confluence_api_url(), self.md_source, self.version
         )
 
-        if self.title is not None:
-            title = self.title
-            has_title = True
-        else:
-            with open(self.file, "r") as mdfile:
-                title = mdfile.readline().lstrip("#").strip()
-                mdfile.seek(0)
-            has_title = False
+        title = self.get_title()
 
         html = converter.convert_md_to_conf_html(
-            has_title=has_title,
+            remove_first_line=self.title is None,
             remove_emojies=remove_emojies,
             add_contents=add_contents,
         )
@@ -78,7 +90,7 @@ class ConfluenceConverter:
             return
 
         LOGGER.info("Checking if Atlas page exists...")
-        page = self.confluence_client.get_page(title)
+        page = self.get_client().get_page(title)
 
         if delete and page is not None and page.id > 0:
             self.client.delete_page(page.id)
@@ -87,14 +99,14 @@ class ConfluenceConverter:
         parent_page_id = self.get_parent_page()
 
         if page.id == 0:
-            page = self.confluence_client.create_page(title, html, parent_page_id)
+            page = self.get_client().create_page(title, html, parent_page_id)
 
         LOGGER.info("Page Id %d" % page.id)
         html = self.add_images(page.id, html)
         # Add local references
         html = self.add_local_refs(page.id, page.spaceId, title, html, converter)
 
-        self.confluence_client.update_page(
+        self.get_client().update_page(
             page.id, title, html, page.version, parent_page_id
         )
 
@@ -106,10 +118,10 @@ class ConfluenceConverter:
             )
 
             for prop in properties_for_update:
-                self.confluence_client.update_page_property(page.id, prop)
+                self.get_client().update_page_property(page.id, prop)
 
         if labels is not None and len(labels) > 0:
-            self.confluence_client.update_labels(page.id, labels)
+            self.get_client().update_labels(page.id, labels)
 
         if attachments is not None and len(attachments) > 0:
             self.add_attachments(page.id, attachments)
@@ -127,7 +139,7 @@ class ConfluenceConverter:
         """
         if files:
             for file in files:
-                self.confluence_client.upload_attachment(
+                self.get_client().upload_attachment(
                     page_id, os.path.join(self.source_folder, file), ""
                 )
 
@@ -147,7 +159,7 @@ class ConfluenceConverter:
             alt_text = re.search(r'alt="(.*?)"', tag).group(1)
             abs_path = os.path.join(self.source_folder, rel_path)
             basename = os.path.basename(rel_path)
-            self.confluence_client.upload_attachment(page_id, abs_path, alt_text)
+            self.get_client().upload_attachment(page_id, abs_path, alt_text)
             if re.search(r"http.*", rel_path) is None:
                 if self.get_confluence_api_url().endswith("/wiki"):
                     html = html.replace(
@@ -228,7 +240,7 @@ class ConfluenceConverter:
         Returns:
             array of properties to update
         """
-        properties = self.confluence_client.get_page_properties(page_id)
+        properties = self.get_client().get_page_properties(page_id)
         properties_for_update = []
         for existing_prop in properties:
             # Change the editor version
@@ -275,7 +287,7 @@ class ConfluenceConverter:
             else:
                 url = "https://%s.atlassian.net/wiki" % self.org_name
         if not self.use_ssl:
-            url.replace("https://", "http://")
+            url = url.replace("https://", "http://")
         return url
 
     def get_client(self) -> ConfluenceApiClient:
@@ -285,24 +297,24 @@ class ConfluenceConverter:
             url,
             self.user_name,
             self.api_key,
-            self.space_key,
+            self.get_space_key(),
             self.version,
             self.use_ssl,
         )
 
-    def get_space_key(self, space_key: str) -> str:
-        if space_key is None:
+    def get_space_key(self) -> str:
+        if self.space_key is None:
             return "~%s" % (self.user_name)
 
-        return space_key
+        return self.space_key
 
     def get_parent_page(self):
         parent_page_id = 0
         if self.ancestor:
-            parent_page = self.confluence_client.get_page(self.ancestor)
-            if parent_page:
+            parent_page = self.get_client().get_page(self.ancestor)
+            if parent_page is not None and parent_page.id > 0:
                 parent_page_id = parent_page.id
             else:
-                LOGGER.error("Error: Parent page does not exist: %s", self.ancestor)
+                LOGGER.error(f"Error: Parent page does not exist: {self.ancestor}")
                 parent_page_id = 0
         return parent_page_id

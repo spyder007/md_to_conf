@@ -15,6 +15,11 @@ def test_converter_advanced() -> MarkdownConverter:
     return MarkdownConverter("tests/testfiles/advanced.md", URL, "default", 2)
 
 
+@pytest.fixture
+def test_converter_image() -> MarkdownConverter:
+    return MarkdownConverter("tests/testfiles/withimage.md", URL, "default", 2)
+
+
 def test_converter_init():
     md_file = "tests/testfiles/basic.md"
     url = "https://domain.confluence.net/wiki"
@@ -33,10 +38,13 @@ def test_converter_basic_test(test_converter_basic: MarkdownConverter, snapshot)
     html = test_converter_basic.get_html_from_markdown()
     assert html == snapshot
 
+def test_converter_image_test(test_converter_image: MarkdownConverter, snapshot):
+    html = test_converter_image.get_html_from_markdown()
+    assert html == snapshot
 
 def test_converter_html(test_converter_basic: MarkdownConverter, snapshot):
     html = test_converter_basic.convert_md_to_conf_html(
-        has_title=False, remove_emojies=False, add_contents=False
+        remove_first_line=True, remove_emojies=False, add_contents=False
     )
     assert html == snapshot
 
@@ -45,14 +53,14 @@ def test_converter_html_advanced_with_toc(
     test_converter_advanced: MarkdownConverter, snapshot
 ):
     html = test_converter_advanced.convert_md_to_conf_html(
-        has_title=False, remove_emojies=True, add_contents=True
+        remove_first_line=True, remove_emojies=True, add_contents=True
     )
     assert html == snapshot
 
 
 def test_converter_html_advanced(test_converter_advanced: MarkdownConverter, snapshot):
     html = test_converter_advanced.convert_md_to_conf_html(
-        has_title=False, remove_emojies=True, add_contents=False
+        remove_first_line=True, remove_emojies=True, add_contents=False
     )
     assert html == snapshot
 

@@ -8,22 +8,30 @@
   <p>Some text for heading 3-1</p>
   <h3>Heading 3-2</h3>
   <p>Some test for heading 3-2</p>
+  <h4>Unordered list</h4>
   <ul>
   <li>An</li>
   <li>unordered</li>
   <li>list</li>
   </ul>
+  <h4>Ordered List</h4>
   <ol>
   <li>An</li>
   <li>Ordered</li>
   <li>List</li>
   </ol>
-  <pre><code class="language-less">&gt; This is an info
-  </code></pre>
-  <pre><code class="language-less">&gt; Note: This is a note
-  </code></pre>
-  <pre><code class="language-less">&gt; Warning: This is a warning
-  </code></pre>
+  <h4>Info Block</h4>
+  <blockquote>
+  <p>Info block</p>
+  </blockquote>
+  <h4>Note block</h4>
+  <blockquote>
+  <p>Note: This is a note</p>
+  </blockquote>
+  <h4>Warning Block</h4>
+  <blockquote>
+  <p>Warning: This is a warning</p>
+  </blockquote>
   '''
 # ---
 # name: test_converter_html
@@ -34,42 +42,50 @@
   <p>Some text for heading 3-1</p>
   <h3>Heading 3-2</h3>
   <p>Some test for heading 3-2</p>
+  <h4>Unordered list</h4>
   <ul>
   <li>An</li>
   <li>unordered</li>
   <li>list</li>
   </ul>
+  <h4>Ordered List</h4>
   <ol>
   <li>An</li>
   <li>Ordered</li>
   <li>List</li>
   </ol>
-  <ac:structured-macro ac:name="code"><ac:parameter ac:name="theme">Midnight</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">less</ac:parameter><ac:plain-text-body><![CDATA[> This is an info
-  ]]></ac:plain-text-body></ac:structured-macro>
-  <ac:structured-macro ac:name="code"><ac:parameter ac:name="theme">Midnight</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">less</ac:parameter><ac:plain-text-body><![CDATA[> Note: This is a note
-  ]]></ac:plain-text-body></ac:structured-macro>
-  <ac:structured-macro ac:name="code"><ac:parameter ac:name="theme">Midnight</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">less</ac:parameter><ac:plain-text-body><![CDATA[> Warning: This is a warning
-  ]]></ac:plain-text-body></ac:structured-macro>
+  <h4>Info Block</h4>
+  <p><ac:structured-macro ac:name="info"><ac:rich-text-body><p>Info block</p></ac:rich-text-body></ac:structured-macro></p>
+  <h4>Note block</h4>
+  <p><ac:structured-macro ac:name="note"><ac:rich-text-body><p>This is a note</p></ac:rich-text-body></ac:structured-macro></p>
+  <h4>Warning Block</h4>
+  <p><ac:structured-macro ac:name="warning"><ac:rich-text-body><p>This is a warning</p></ac:rich-text-body></ac:structured-macro></p>
   '''
 # ---
 # name: test_converter_html_advanced
   '''
-  <h2>Heading 2</h2>
-  <p>Some text for heading 2</p>
-  <h3>Heading 3-1</h3>
-  <p>Some text for heading 3-1</p>
-  <h3>Heading 3-2</h3>
-  <p>Some test for heading 3-2</p>
+  <h2>Headings</h2>
+  <p>The heading for this section is a level 2 heading</p>
+  <h3>Level 3</h3>
+  <p>Some text for level 3</p>
+  <h4>Level 4</h4>
+  <p>Some text for level 4</p>
+  <h5>Level 5</h5>
+  <p>Some text for level 5</p>
+  <h2>Lists</h2>
+  <h3>Unordered list</h3>
   <ul>
   <li>An</li>
   <li>unordered</li>
   <li>list</li>
   </ul>
+  <h3>Ordered list</h3>
   <ol>
   <li>An</li>
   <li>Ordered</li>
   <li>List</li>
   </ol>
+  <h3>Nested Unordered list</h3>
   <ul>
   <li>This list is nested</li>
   <li>This item has children<ul>
@@ -79,6 +95,7 @@
   </li>
   <li>This is the third item</li>
   </ul>
+  <h3>Nested Ordered list</h3>
   <ol>
   <li>This list is nested</li>
   <li>This item has children<ol>
@@ -88,16 +105,57 @@
   </li>
   <li>This is the third item</li>
   </ol>
-  <p>Text above Info</p>
+  <h2>Blocks</h2>
+  <h3>Info Block</h3>
   <p><ac:structured-macro ac:name="info"><ac:rich-text-body><p>This should be an info block</p></ac:rich-text-body></ac:structured-macro></p>
-  <p>Text above Note</p>
+  <h3>Note/Warning Block</h3>
   <p><ac:structured-macro ac:name="note"><ac:rich-text-body><p>This should be a note block</p></ac:rich-text-body></ac:structured-macro></p>
-  <p>Text above warning</p>
+  <h3>Warning Block</h3>
   <p><ac:structured-macro ac:name="warning"><ac:rich-text-body><p>This should be a warning block</p></ac:rich-text-body></ac:structured-macro></p>
+  <h2>Code</h2>
+  <h3>No language</h3>
   <ac:structured-macro ac:name="code"><ac:parameter ac:name="theme">Midnight</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">none</ac:parameter><ac:plain-text-body><![CDATA[This is a code block with on language assigned
   ]]></ac:plain-text-body></ac:structured-macro>
+  <h3>Javascript</h3>
   <ac:structured-macro ac:name="code"><ac:parameter ac:name="theme">Midnight</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">javascript</ac:parameter><ac:plain-text-body><![CDATA[var block = has_javascript_lang();
   ]]></ac:plain-text-body></ac:structured-macro>
+  <h2>Tables</h2>
+  <table>
+  <thead>
+  <tr>
+  <th>Heading 1</th>
+  <th>Heading 2</th>
+  <th>Heading 3</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  </tbody>
+  </table>
   '''
 # ---
 # name: test_converter_html_advanced_with_toc
@@ -110,22 +168,28 @@
   <ac:parameter ac:name="type">list</ac:parameter><ac:parameter ac:name="outline">false</ac:parameter>
   <ac:parameter ac:name="include"></ac:parameter>
   </ac:structured-macro>
-  <h2>Heading 2</h2>
-  <p>Some text for heading 2</p>
-  <h3>Heading 3-1</h3>
-  <p>Some text for heading 3-1</p>
-  <h3>Heading 3-2</h3>
-  <p>Some test for heading 3-2</p>
+  <h2>Headings</h2>
+  <p>The heading for this section is a level 2 heading</p>
+  <h3>Level 3</h3>
+  <p>Some text for level 3</p>
+  <h4>Level 4</h4>
+  <p>Some text for level 4</p>
+  <h5>Level 5</h5>
+  <p>Some text for level 5</p>
+  <h2>Lists</h2>
+  <h3>Unordered list</h3>
   <ul>
   <li>An</li>
   <li>unordered</li>
   <li>list</li>
   </ul>
+  <h3>Ordered list</h3>
   <ol>
   <li>An</li>
   <li>Ordered</li>
   <li>List</li>
   </ol>
+  <h3>Nested Unordered list</h3>
   <ul>
   <li>This list is nested</li>
   <li>This item has children<ul>
@@ -135,6 +199,7 @@
   </li>
   <li>This is the third item</li>
   </ul>
+  <h3>Nested Ordered list</h3>
   <ol>
   <li>This list is nested</li>
   <li>This item has children<ol>
@@ -144,16 +209,63 @@
   </li>
   <li>This is the third item</li>
   </ol>
-  <p>Text above Info</p>
+  <h2>Blocks</h2>
+  <h3>Info Block</h3>
   <p><ac:structured-macro ac:name="info"><ac:rich-text-body><p>This should be an info block</p></ac:rich-text-body></ac:structured-macro></p>
-  <p>Text above Note</p>
+  <h3>Note/Warning Block</h3>
   <p><ac:structured-macro ac:name="note"><ac:rich-text-body><p>This should be a note block</p></ac:rich-text-body></ac:structured-macro></p>
-  <p>Text above warning</p>
+  <h3>Warning Block</h3>
   <p><ac:structured-macro ac:name="warning"><ac:rich-text-body><p>This should be a warning block</p></ac:rich-text-body></ac:structured-macro></p>
+  <h2>Code</h2>
+  <h3>No language</h3>
   <ac:structured-macro ac:name="code"><ac:parameter ac:name="theme">Midnight</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">none</ac:parameter><ac:plain-text-body><![CDATA[This is a code block with on language assigned
   ]]></ac:plain-text-body></ac:structured-macro>
+  <h3>Javascript</h3>
   <ac:structured-macro ac:name="code"><ac:parameter ac:name="theme">Midnight</ac:parameter><ac:parameter ac:name="linenumbers">true</ac:parameter><ac:parameter ac:name="language">javascript</ac:parameter><ac:plain-text-body><![CDATA[var block = has_javascript_lang();
   ]]></ac:plain-text-body></ac:structured-macro>
+  <h2>Tables</h2>
+  <table>
+  <thead>
+  <tr>
+  <th>Heading 1</th>
+  <th>Heading 2</th>
+  <th>Heading 3</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  <tr>
+  <td>Data 1</td>
+  <td>Data 2</td>
+  <td>Data 3</td>
+  </tr>
+  </tbody>
+  </table>
+  '''
+# ---
+# name: test_converter_image_test
+  '''
+  <h1>Page with Image</h1>
+  <p><img alt="My Image" src="./images/image1.jpg" /></p>
   '''
 # ---
 # name: test_toc_convert

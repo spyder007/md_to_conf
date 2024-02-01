@@ -32,7 +32,7 @@ class MarkdownConverter:
 
     def convert_md_to_conf_html(
         self,
-        has_title: bool = False,
+        remove_first_line: bool = True,
         remove_emojies: bool = False,
         add_contents: bool = False,
     ):
@@ -40,7 +40,7 @@ class MarkdownConverter:
         Convert the Markdown file to Confluence HTML
 
         Args:
-            has_title: Was a title provided via the CLI?
+            remove_first_line: Remove the first line (usually the title)
             remove_emojies: Should emojies be removed?
             add_contents: Should a contents section be added to the page
 
@@ -48,7 +48,9 @@ class MarkdownConverter:
             A string representing HTML for the Markdown page
         """
         html = self.get_html_from_markdown()
-        if not has_title:
+        LOGGER.debug("HTML pre processing")
+        LOGGER.debug(html)
+        if remove_first_line:
             html = "\n".join(html.split("\n")[1:])
 
         html = self.create_table_of_content(html)

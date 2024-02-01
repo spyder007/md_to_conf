@@ -4,7 +4,7 @@ import sys
 import os
 import argparse
 from .confluence_converter import ConfluenceConverter
-from .client import ConfluenceApiClient
+from .client import ConfluenceApiClient, PageInfo
 from .converter import MarkdownConverter
 
 

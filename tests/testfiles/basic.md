@@ -12,22 +12,26 @@ Some text for heading 3-1
 
 Some test for heading 3-2
 
+#### Unordered list
+
 * An
 * unordered
 * list
+
+#### Ordered List
 
 1. An
 2. Ordered
 3. List
 
-```less
-> This is an info
-```
+#### Info Block
 
-```less
+> Info block
+
+#### Note block
+
 > Note: This is a note
-```
 
-```less
+#### Warning Block
+
 > Warning: This is a warning
-```
