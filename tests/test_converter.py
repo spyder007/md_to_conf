@@ -38,9 +38,11 @@ def test_converter_basic_test(test_converter_basic: MarkdownConverter, snapshot)
     html = test_converter_basic.get_html_from_markdown()
     assert html == snapshot
 
+
 def test_converter_image_test(test_converter_image: MarkdownConverter, snapshot):
     html = test_converter_image.get_html_from_markdown()
     assert html == snapshot
+
 
 def test_converter_html(test_converter_basic: MarkdownConverter, snapshot):
     html = test_converter_basic.convert_md_to_conf_html(
